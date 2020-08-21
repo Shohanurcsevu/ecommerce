@@ -3,6 +3,7 @@ import 'package:shop_app/components/custom_suffixIcon.dart';
 import 'package:shop_app/components/default_button.dart';
 import 'package:shop_app/components/form_error.dart';
 import 'package:shop_app/screens/forgot_password/forgot_password_screen.dart';
+import 'package:shop_app/screens/login_success/login_success_screen.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -18,6 +19,20 @@ class _SignInFormState extends State<SignInForm> {
   String password;
   bool remember = false;
   final List<String> errors = [];
+
+  void addError({String error}) {
+    if (!errors.contains(error))
+      setState(() {
+        errors.add(error);
+      });
+  }
+
+  void removeError({String error}) {
+    if (errors.contains(error))
+      setState(() {
+        errors.remove(error);
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +83,8 @@ class _SignInFormState extends State<SignInForm> {
             press: () {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
+
+                Navigator.pushNamed(context, LoginSuccessScreen.routeName);
               }
             },
           )
@@ -81,29 +98,20 @@ class _SignInFormState extends State<SignInForm> {
       keyboardType: TextInputType.emailAddress,
       onSaved: (newValue) => email = newValue,
       onChanged: (value) {
-        if (value.isNotEmpty && errors.contains(kEmailNullError)) {
-          setState(() {
-            errors.remove(kEmailNullError);
-          });
-        } else if (emailValidatorRegExp.hasMatch(value) &&
-            errors.contains(kInvalidEmailError)) {
-          setState(() {
-            errors.remove(kInvalidEmailError);
-          });
+        if (value.isNotEmpty) {
+          removeError(error: kEmailNullError);
+        } else if (emailValidatorRegExp.hasMatch(value)) {
+          removeError(error: kInvalidEmailError);
         }
-
         return null;
       },
       validator: (value) {
-        if (value.isEmpty && !errors.contains(kEmailNullError)) {
-          setState(() {
-            errors.add(kEmailNullError);
-          });
-        } else if (!emailValidatorRegExp.hasMatch(value) &&
-            !errors.contains(kInvalidEmailError)) {
-          setState(() {
-            errors.add(kInvalidEmailError);
-          });
+        if (value.isEmpty) {
+          addError(error: kEmailNullError);
+          return "";
+        } else if (!emailValidatorRegExp.hasMatch(value)) {
+          addError(error: kInvalidEmailError);
+          return "";
         }
 
         return null;
@@ -124,27 +132,21 @@ class _SignInFormState extends State<SignInForm> {
         obscureText: true,
         onSaved: (newValue) => password = newValue,
         onChanged: (value) {
-          if (value.isNotEmpty && errors.contains(kPassNullError)) {
-            setState(() {
-              errors.remove(kPassNullError);
-            });
-          } else if (value.length >= 8 && errors.contains(kShortPassError)) {
-            setState(() {
-              errors.remove(kShortPassError);
-            });
+          if (value.isNotEmpty) {
+            removeError(error: kPassNullError);
+          } else if (value.length >= 8) {
+            removeError(error: kShortPassError);
           }
 
           return null;
         },
         validator: (value) {
-          if (value.isEmpty && !errors.contains(kEmailNullError)) {
-            setState(() {
-              errors.add(kEmailNullError);
-            });
-          } else if (value.length < 8 && !errors.contains(kShortPassError)) {
-            setState(() {
-              errors.add(kShortPassError);
-            });
+          if (value.isEmpty) {
+            addError(error: kPassNullError);
+            return "";
+          } else if (value.length < 8) {
+            addError(error: kShortPassError);
+            return "";
           }
 
           return null;
