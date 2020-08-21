@@ -12,10 +12,10 @@ class LoginSucessScreenBody extends StatelessWidget {
         ),
         Image.asset(
           "assets/images/success.png",
-          height: SizeConfig.screenHeight * 0.4,
+          height: SizeConfig.screenHeight * 0.5,
         ),
         SizedBox(
-          height: SizeConfig.screenHeight * 0.08,
+          height: SizeConfig.screenHeight * 0.04,
         ),
         Text(
           "Login Success",
