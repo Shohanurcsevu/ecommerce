@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/size_config.dart';
 
 const kPrimaryColor = Color(0xFFFF7643);
 const kPrimaryLightColor = Color(0xFFFFECDF);
@@ -12,6 +13,10 @@ const kTextColor = Color(0xFF757575);
 
 const kAnimationDuration = Duration(milliseconds: 200);
 
+final headingStyle = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: getProportionateScreenHeight(35),
+    color: Colors.black);
 
 // Form Error
 final RegExp emailValidatorRegExp =
